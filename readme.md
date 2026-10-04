@@ -23,7 +23,8 @@
 ## Components:
 
 - RPi 4 B 4GB
-- 2x Adafruit I2S MEMS Microphone Breakout - SPH0645LM4H
+- 2x Adafruit I2S MEMS Microphone Breakout - SPH0645LM4H -> discontinued
+- 2x INMP441 I2S MICs -> can record in 16kHz (needed for wakeword recognition)
 - Adafruit Stereo Enclosed Speaker Set - 3W 4 Ohm
 - 2x MAX98357 I2S mono amplifier 3W
 - Breadboard + M-M & M-F cables for connecting everything up
@@ -103,3 +104,15 @@
                        └──────┬───────┘
                               │
                          speaker output
+
+
+0 bcm2835 Headphones: - (hw:0,0), ALSA (0 in, 8 out)
+> 1 snd_rpi_googlevoicehat_soundcar: Google voiceHAT SoundCard HiFi voicehat-hifi-0 (hw:1,0), ALSA (2 in, 0 out)
+  2 sysdefault, ALSA (0 in, 128 out)
+  3 speakerbonnet, ALSA (2 in, 0 out)
+  4 dmixer, ALSA (0 in, 2 out)
+  5 softvol, ALSA (0 in, 2 out)
+  6 dmic_hw, ALSA (2 in, 0 out)
+  7 dmic_sv, ALSA (2 in, 0 out)
+  8 dmix, ALSA (0 in, 2 out)
+< 9 default, ALSA (0 in, 128 out)
