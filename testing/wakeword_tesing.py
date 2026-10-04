@@ -8,7 +8,7 @@ WAKEWORD_WINDOW = 32000
 WAKEWORD_STRIDE = 16000
 
 async def main():
-    mic = Microphone()
+    mic = Microphone(device="plughw:1,0", sample_rate=16000)
 
     model = WakeWordModel(models=["hey_livekit.onnx"])
 
