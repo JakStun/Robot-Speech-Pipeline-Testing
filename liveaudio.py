@@ -131,8 +131,6 @@ class UtteranceRecorder:
 
             audio -= audio.mean()
 
-            audio /= 65536
-
             audio = np.clip(audio, -32768, 32767).astype(np.int16)
 
             self.audio.append(audio.copy())
