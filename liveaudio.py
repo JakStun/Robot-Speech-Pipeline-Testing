@@ -10,16 +10,17 @@ import wave
 import tempfile
 import os
 
-from scipy.signal import resample_poly
-
-from silero_vad import load_silero_vad, VADIterator
+from silero_vad import load_silero_vad
 
 from livekit.wakeword import WakeWordModel
 
 from dataclasses import dataclass
 
+
+SAMPLE_RATE = 16000
+
 WAKEWORD_WINDOW = 32000      # 2 seconds
-WAKEWORD_STRIDE = SAMPLE_RATE = 16000      # 1 second
+WAKEWORD_STRIDE = SAMPLE_RATE      # 1 second
 
 CHUNK_SIZE = 512
 
@@ -34,14 +35,15 @@ class AudioFrame:
 
 class Microphone:
 
-    def __init__(self, device="dmic_sv", sample_rate=48000) -> None:
+    def __init__(self, device="plughw:1,0", sample_rate=16000, channels=2) -> None:
         self.device = device
 
         self.sample_rate = sample_rate
         self.output_sample_rate = 16000
-        self.channels = 2
+        
+        self.channels = channels
 
-        self.frame_size = 2880
+        self.frame_size = 512 # 512 samples at 16 kHz = 32 ms
 
         self.queue = queue.Queue(maxsize=10)
 
@@ -83,26 +85,12 @@ class Microphone:
     def _audio_callback(self, indata, frames, time, status) -> None:
         # take one mic channel -> TODO: Check what it means
 
+        # taking channel 0
         ch0 = indata[:, 0]
-        ch1 = indata[:, 1]
 
         frame = ch0.copy()
 
-        # # 48 kHz -> 16 kHz
-        frame_16k = resample_poly(frame, up=1, down=3).astype(np.float32)
-
-        # print(
-        #     "48k int32:",
-        #     frame.min(),
-        #     frame.max(),
-        #     np.sqrt(np.mean(frame.astype(np.float64) ** 2)),
-        # )
-        # print(
-        #     "16k float32:",
-        #     frame_16k.min(),
-        #     frame_16k.max(),
-        #     np.sqrt(np.mean(frame_16k.astype(np.float64) ** 2)),
-        # )
+        frame_16k = frame.astype(np.int32)
 
         audio_frame = AudioFrame(
             samples=frame,
